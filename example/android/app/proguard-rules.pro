@@ -8,3 +8,7 @@
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
 # Add any project specific keep options here:
+
+# TikTok, see https://business-api.tiktok.com/portal/docs?id=1739585434183746
+-keep class com.tiktok.** { *; }
+-keep class com.android.billingclient.api.** { *; }

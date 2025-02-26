@@ -1,5 +1,5 @@
 {
-  "name": "react-native-tiktok-business",
+  "name": "react-native-tiktok-business-sdk",
   "version": "0.1.0",
   "description": "A React Native bridge for the TikTok Business SDK",
   "source": "./src/index.tsx",

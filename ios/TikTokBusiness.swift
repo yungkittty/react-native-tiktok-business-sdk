@@ -1,5 +1,5 @@
-@objc(TiktokBusiness)
-class TiktokBusiness: NSObject {
+@objc(TikTokBusiness)
+class TikTokBusiness: NSObject {
 
   @objc(multiply:withB:withResolver:withRejecter:)
   func multiply(a: Float, b: Float, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {

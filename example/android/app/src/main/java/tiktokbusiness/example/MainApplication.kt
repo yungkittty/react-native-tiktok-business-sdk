@@ -1,4 +1,4 @@
-package tiktokbusinessexample
+package com.tiktokbusinessexample
 
 import android.app.Application
 import com.facebook.react.PackageList

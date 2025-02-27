@@ -1,4 +1,4 @@
-package tiktokbusinessexample
+package com.tiktokbusinessexample
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

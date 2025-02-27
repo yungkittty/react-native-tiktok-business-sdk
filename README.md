@@ -156,6 +156,7 @@ import {
 
 ## Upcoming Features
 
+- [ ] Add example app
 - [ ] Unit and integration tests
 - [ ] Add support for TurboModules
 - [ ] Improve TypeScript declarations and documentation

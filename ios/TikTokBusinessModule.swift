@@ -1,7 +1,7 @@
 import Foundation
 import React
 import UIKit
-import TikTokBusinessSdk
+import TikTokBusinessSDK
 
 @objc(TikTokBusinessModule)
 class TikTokBusinessModule: NSObject, RCTBridgeModule {
@@ -23,7 +23,7 @@ class TikTokBusinessModule: NSObject, RCTBridgeModule {
                       externalUserName: String?,
                       phoneNumber: String?,
                       email: String) {
-    TikTokBusinessSdk.identify(withExternalID: externalId,
+    TikTokBusiness.identify(withExternalID: externalId,
                                externalUserName: externalUserName,
                                phoneNumber: phoneNumber,
                                email: email)
@@ -31,7 +31,7 @@ class TikTokBusinessModule: NSObject, RCTBridgeModule {
   
   /// Logs out the user.
   @objc func logout() {
-    TikTokBusinessSdk.logout()
+    TikTokBusiness.logout()
   }
   
   /// Reports a standard event.
@@ -41,31 +41,20 @@ class TikTokBusinessModule: NSObject, RCTBridgeModule {
   @objc func trackEvent(_ eventName: String,
                         eventId: String?,
                         parameters: NSDictionary?) {
-    guard let eventEnum = EventName(rawValue: eventName) else {
-      print("Invalid event name: \(eventName)")
-      return
-    }
+    let event = TikTokBaseEvent(eventName: eventName, eventId: eventId)
     
-    if parameters == nil || (parameters?.count ?? 0) == 0 {
-      if eventId == nil || eventId!.isEmpty {
-        TikTokBusinessSdk.trackTTEvent(eventEnum)
-      } else {
-        TikTokBusinessSdk.trackTTEvent(eventEnum, eventId: eventId!)
-      }
-    } else {
-      let builder = TTBaseEvent.newBuilder(eventName: eventEnum.toString())
+    if parameters != nil && (parameters?.count ?? 0) > 0 {
       for (key, value) in parameters! {
         guard let keyStr = key as? String else { continue }
         if let stringValue = value as? String {
-          builder.addProperty(key: keyStr, value: stringValue)
+          event.addProperty(withKey: keyStr, value: stringValue)
         } else if let numberValue = value as? NSNumber {
-          builder.addProperty(key: keyStr, value: numberValue.doubleValue)
+          event.addProperty(withKey: keyStr, value: Double(numberValue))
         } else if let boolValue = value as? Bool {
-          builder.addProperty(key: keyStr, value: boolValue)
+          event.addProperty(withKey: keyStr, value: boolValue)
         }
       }
-      let event = builder.build()
-      TikTokBusinessSdk.trackTTEvent(event)
+      TikTokBusiness.trackTTEvent(event)
     }
   }
   
@@ -73,18 +62,18 @@ class TikTokBusinessModule: NSObject, RCTBridgeModule {
   /// Selects the appropriate event builder based on the eventType and iterates over the "CONTENTS" array to add all content items.
   @objc func trackContentEvent(_ eventType: String,
                                properties: NSDictionary?) {
-    var builder: TTContentsEventBuilder
+    let event: TikTokContentsEvent
     switch eventType {
     case "ADD_TO_CART":
-      builder = TTAddToCartEvent.newBuilder()
+      event = TikTokAddToCartEvent()
     case "ADD_TO_WHISHLIST":
-      builder = TTAddToWishlistEvent.newBuilder()
+      event = TikTokAddToWishlistEvent()
     case "CHECK_OUT":
-      builder = TTCheckoutEvent.newBuilder()
+      event = TikTokCheckoutEvent()      
     case "PURCHASE":
-      builder = TTPurchaseEvent.newBuilder()
+      event = TikTokPurchaseEvent()
     case "VIEW_CONTENT":
-      builder = TTViewContentEvent.newBuilder()
+      event = TikTokViewContentEvent()
     default:
       print("Unsupported content event type: \(eventType)")
       return
@@ -92,91 +81,84 @@ class TikTokBusinessModule: NSObject, RCTBridgeModule {
     
     if let props = properties, props.count > 0 {
       if let description = props["DESCRIPTION"] as? String {
-        builder.setDescription(description)
+        event.setDescription(description)
       }
-      if let currencyStr = props["CURRENCY"] as? String, !currencyStr.isEmpty,
-         let currency = TTContentsEventConstants.Currency(rawValue: currencyStr) {
-        builder.setCurrency(currency)
+      if let currencyStr = props["CURRENCY"] as? String {
+        event.setCurrency(TTCurrency.CLP)
       }
       if let value = props["VALUE"] as? NSNumber {
-        builder.setValue(value.doubleValue)
+        event.setValue(value.stringValue)
       }
       if let contentType = props["CONTENT_TYPE"] as? String {
-        builder.setContentType(contentType)
+        event.setContentType(contentType)
+      }
+      if let contentType = props["CONTENT_ID"] as? String {
+        event.setContentId(contentType)
       }
       
       // Process the "CONTENTS" array
       if let contentsArray = props["CONTENTS"] as? [NSDictionary] {
-        var contentParamsList: [TTContentParams] = []
+        var contentParamsList : [TikTokContentParams] = []
         for contentDict in contentsArray {
-          let contentBuilder = TTContentParams.newBuilder()
+          let eventContent = TikTokContentParams()
           if let contentId = contentDict["CONTENT_ID"] as? String {
-            contentBuilder.setContentId(contentId)
-          }
-          if let contentCategory = contentDict["CONTENT_CATEGORY"] as? String {
-            contentBuilder.setContentCategory(contentCategory)
+            eventContent.contentId = contentId
           }
           if let brand = contentDict["BRAND"] as? String {
-            contentBuilder.setBrand(brand)
+            eventContent.brand = brand
           }
           if let price = contentDict["PRICE"] as? NSNumber {
-            contentBuilder.setPrice(Float(price.doubleValue))
+            eventContent.price = NSNumber(value: price.doubleValue)
           }
           if let quantity = contentDict["QUANTITY"] as? NSNumber {
-            contentBuilder.setQuantity(quantity.intValue)
+            eventContent.quantity = quantity.intValue
           }
           if let contentName = contentDict["CONTENT_NAME"] as? String {
-            contentBuilder.setContentName(contentName)
+            eventContent.contentName = contentName
           }
-          contentParamsList.append(contentBuilder.build())
+          contentParamsList.append(eventContent)
         }
         // Set all content items using the varargs setter
-        builder.setContents(contents: contentParamsList)
+        event.setContents(contentParamsList)
       }
     }
-    let event = builder.build()
-    TikTokBusinessSdk.trackTTEvent(event)
+    TikTokBusiness.trackTTEvent(event)
   }
   
   /// Reports a custom event.
   /// Builds the event using TTBaseEvent.newBuilder and adds the provided properties.
   @objc func trackCustomEvent(_ eventName: String,
                               properties: NSDictionary?) {
-    let builder = TTBaseEvent.newBuilder(eventName: eventName)
+    let customEvent = TikTokBaseEvent(name: eventName)
     if let props = properties, props.count > 0 {
       for (key, value) in props {
         guard let keyStr = key as? String else { continue }
         if let stringValue = value as? String {
-          builder.addProperty(key: keyStr, value: stringValue)
+          customEvent.addProperty(withKey: keyStr, value: stringValue)
         } else if let numberValue = value as? NSNumber {
-          builder.addProperty(key: keyStr, value: numberValue.doubleValue)
+          customEvent.addProperty(withKey: keyStr, value: numberValue)
         } else if let boolValue = value as? Bool {
-          builder.addProperty(key: keyStr, value: boolValue)
+          customEvent.addProperty(withKey: keyStr, value: boolValue)
         }
       }
     }
-    let event = builder.build()
-    TikTokBusinessSdk.trackTTEvent(event)
+    TikTokBusiness.trackTTEvent(customEvent)
   }
   
   /// Initializes the TikTok SDK.
   /// Accepts appId, ttAppId, and an optional debug flag.
-  @objc func initializeSdk(_ appId: String,
-                           _ ttAppId: String,
-                           _ debug: Bool?) {
-    // let context = UIApplication.shared
-    // let config = TikTokBusinessSdk.TTConfig(context: context)
-    //   .setAppId(appId)
-    //   .setTTAppId(ttAppId)
+  @objc func initializeSdk(_ appId: String, ttAppId: String, debug: NSNumber) {
     let config = TikTokConfig.init(appId: appId, tiktokAppId: ttAppId)
-    if let debugValue = debug {
-      config.openDebugMode().setLogLevel(TikTokBusinessSdk.LogLevel.DEBUG)
+    let debugValue = debug.boolValue
+    if debugValue {
+      config?.enableDebugMode()
+      config?.setLogLevel(TikTokLogLevelDebug)
     }
-    TikTokBusinessSdk.initializeSdk(config) { (success: Bool, code: Int, msg: String?) in
+    TikTokBusiness.initializeSdk(config) { success, error in
       if success {
-        TikTokBusinessSdk.startTrack()
+        print("[TikTokBusiness] TikTokBusiness initialized OK")
       } else {
-        print("Initialization failed: \(msg ?? "Unknown error") (code: \(code))")
+        print("[TikTokBusiness] Initialization failed: \(error!.localizedDescription)")
       }
     }
   }

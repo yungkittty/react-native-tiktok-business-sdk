@@ -106,7 +106,7 @@ export const initializeSdk = async (
   ttAppId: string,
   debug?: Boolean
 ): Promise<string> =>
-  await TikTokBusinessModule.initializeSdk(appId, ttAppId, debug);
+  await TikTokBusinessModule.initializeSdk(appId, ttAppId, debug || false);
 
 /**
  * Identifies the user.

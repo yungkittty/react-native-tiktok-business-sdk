@@ -159,6 +159,15 @@ import {
 } from 'react-native-tiktok-business-sdk';
 ```
 
+## Proguard
+
+If you're using Proguard to optimize your app, you must add rules to prevent Proguard from removing classes.
+
+```java
+-keep class com.tiktok.** { *; }
+-keep class com.android.billingclient.api.** { *; }
+```
+
 ## Upcoming Features
 
 - [ ] Add example app

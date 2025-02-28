@@ -1,5 +1,10 @@
 # react-native-tiktok-business-sdk
 
+[![npm version](https://img.shields.io/npm/v/react-native-tiktok-business-sdk.svg)](https://www.npmjs.com/package/react-native-tiktok-business-sdk)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/mtebele/react-native-tiktok-business-sdk/ci.yml)](https://github.com/mtebele/react-native-tiktok-business-sdk/actions)
+[![npm downloads](https://img.shields.io/npm/dw/react-native-tiktok-business-sdk.svg)](https://www.npmjs.com/package/react-native-tiktok-business-sdk)
+[![License](https://img.shields.io/npm/l/react-native-tiktok-business-sdk.svg)](https://github.com/mtebele/react-native-tiktok-business-sdk/blob/main/LICENSE)
+
 A React Native bridge for the TikTok Business SDK
 
 This library exposes native methods for initializing the TikTok SDK, identifying users, logging out, and tracking various events (standard, content, and custom events) via the TikTok Business SDK.
@@ -152,6 +157,15 @@ import {
   TikTokContentEventParameter,
   TikTokContentEventName,
 } from 'react-native-tiktok-business-sdk';
+```
+
+## Proguard
+
+If you're using Proguard to optimize your app, you must add rules to prevent Proguard from removing classes.
+
+```java
+-keep class com.tiktok.** { *; }
+-keep class com.android.billingclient.api.** { *; }
 ```
 
 ## Upcoming Features

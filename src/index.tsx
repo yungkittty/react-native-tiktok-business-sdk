@@ -47,7 +47,7 @@ export enum TikTokEventName {
 
 // Events that allow additional parameters:
 export enum TikTokContentEventName {
-  ADD_TO_CARD = 'ADD_TO_CARD',
+  ADD_TO_CART = 'ADD_TO_CART',
   ADD_TO_WISHLIST = 'ADD_TO_WISHLIST',
   CHECK_OUT = 'CHECK_OUT',
   PURCHASE = 'PURCHASE',

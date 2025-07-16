@@ -26,10 +26,10 @@ class TikTokBusinessModule: NSObject, RCTBridgeModule {
                       resolver: @escaping RCTPromiseResolveBlock,
                       rejecter: @escaping RCTPromiseRejectBlock) {
     do {
-      TikTokBusiness.identifyWithExternalID(externalId,
-                                          externalUserName: externalUserName,
-                                          phoneNumber: phoneNumber,
-                                          email: email)
+      TikTokBusiness.identify(withExternalID: externalId,
+                              externalUserName: externalUserName,
+                              phoneNumber: phoneNumber,
+                              email: email)
       resolver("User identified successfully")
     } catch {
       rejecter("IDENTIFY_ERROR", "Failed to identify user", error)

@@ -1,6 +1,6 @@
 {
   "name": "react-native-tiktok-business-sdk",
-  "version": "1.1.2",
+  "version": "1.4.1",
   "description": "A React Native bridge for the TikTok Business SDK",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
@@ -102,6 +102,22 @@
     "modulePathIgnorePatterns": [
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/__tests__/setup.ts"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!src/**/*.d.ts",
+      "!src/__tests__/**"
+    ],
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ],
+    "testMatch": [
+      "<rootDir>/src/__tests__/**/*.test.{ts,tsx}"
     ]
   },
   "commitlint": {

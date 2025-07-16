@@ -167,6 +167,7 @@ If you're using Proguard to optimize your app, you must add rules to prevent Pro
 ```java
 -keep class com.tiktok.** { *; }
 -keep class com.android.billingclient.api.** { *; }
+-keep class androidx.lifecycle.** { *; }
 ```
 
 ## Upcoming Features

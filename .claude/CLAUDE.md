@@ -48,12 +48,14 @@ This is a React Native bridge for the TikTok Business SDK v1.4.1, enabling JavaS
 #### Native Modules
 - **Android**: `android/src/main/java/com/tiktokbusiness/TikTokBusinessModule.kt` (TikTok Business SDK v1.4.1)
 - **iOS**: `ios/TikTokBusinessModule.swift` (TikTok Business SDK v1.4.1)
+- **iOS Bridge**: `ios/TikTokBusinessModule.mm` (Objective-C bridge declarations)
 - Both implement promise-based async methods using RCTPromiseResolveBlock/RCTPromiseRejectBlock
 - **iOS Implementation Notes**:
   - Uses modern TikTok SDK APIs: `identifyWithExternalID`, `trackTTEvent`, `initializeSdk` with completionHandler
   - Avoids deprecated methods like `trackEvent` (use `trackTTEvent` instead)
   - Proper error handling with specific error codes (INIT_ERROR, IDENTIFY_ERROR, etc.)
   - Uses `TikTokConfig(accessToken:appId:tiktokAppId:)` constructor pattern
+  - **Critical**: `.mm` bridge file must declare `resolver` and `rejecter` parameters for all promise-based methods
 - **Android Implementation Notes**:
   - Uses promise-based async methods with proper error handling
   - Implements `TTInitCallback` for initialization success/failure handling
@@ -121,6 +123,12 @@ This is a React Native bridge for the TikTok Business SDK v1.4.1, enabling JavaS
 - `initializeSdk(appId, ttAppId, accessToken, debug?)` - accessToken is required
 - `identify(externalId, externalUserName, phoneNumber, email)` - all 4 parameters required
 - Error handling tests may show expected errors in console - this is normal behavior
+
+### Bridge Configuration Critical Notes
+- **iOS Bridge Synchronization**: The `ios/TikTokBusinessModule.mm` file must exactly match the Swift implementation
+- **Promise Parameters**: All methods returning promises must declare `resolver:(RCTPromiseResolveBlock)` and `rejecter:(RCTPromiseRejectBlock)` in the `.mm` file
+- **Parameter Count Matching**: React Native will throw "got X arguments, expected Y" errors if `.mm` declarations don't match Swift method signatures
+- **Common Fix**: If you add/remove parameters in Swift, update the corresponding `RCT_EXTERN_METHOD` declaration in `.mm`
 
 ### Testing and Quality
 - Run `yarn test && yarn lint && yarn typecheck` before commits

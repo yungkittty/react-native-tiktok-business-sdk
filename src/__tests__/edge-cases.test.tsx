@@ -26,11 +26,12 @@ describe('Edge Cases and Error Handling', () => {
     it('should handle empty string app IDs', async () => {
       mockTikTokBusinessModule.initializeSdk.mockResolvedValue('success');
 
-      await initializeSdk('', '');
+      await initializeSdk('', '', 'test-token');
 
       expect(mockTikTokBusinessModule.initializeSdk).toHaveBeenCalledWith(
         '',
         '',
+        'test-token',
         false
       );
     });
@@ -38,13 +39,15 @@ describe('Edge Cases and Error Handling', () => {
     it('should handle special characters in app IDs', async () => {
       const appId = 'com.example.app-123!@#';
       const ttAppId = 'tt-app-456$%^';
+      const accessToken = 'test-token';
       mockTikTokBusinessModule.initializeSdk.mockResolvedValue('success');
 
-      await initializeSdk(appId, ttAppId);
+      await initializeSdk(appId, ttAppId, accessToken);
 
       expect(mockTikTokBusinessModule.initializeSdk).toHaveBeenCalledWith(
         appId,
         ttAppId,
+        accessToken,
         false
       );
     });
@@ -52,13 +55,15 @@ describe('Edge Cases and Error Handling', () => {
     it('should handle very long app IDs', async () => {
       const longAppId = 'a'.repeat(1000);
       const longTtAppId = 'b'.repeat(1000);
+      const accessToken = 'test-token';
       mockTikTokBusinessModule.initializeSdk.mockResolvedValue('success');
 
-      await initializeSdk(longAppId, longTtAppId);
+      await initializeSdk(longAppId, longTtAppId, accessToken);
 
       expect(mockTikTokBusinessModule.initializeSdk).toHaveBeenCalledWith(
         longAppId,
         longTtAppId,
+        accessToken,
         false
       );
     });
@@ -340,7 +345,7 @@ describe('Edge Cases and Error Handling', () => {
       mockTikTokBusinessModule.trackCustomEvent.mockResolvedValue('success');
 
       const operations = [
-        initializeSdk('app1', 'tt1'),
+        initializeSdk('app1', 'tt1', 'test-token'),
         identify('user1', 'name1', 'phone1', 'email1'),
         trackEvent(TikTokEventName.REGISTRATION),
         trackContentEvent(TikTokContentEventName.ADD_TO_CART),

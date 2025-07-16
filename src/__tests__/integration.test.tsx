@@ -29,7 +29,12 @@ describe('Integration Tests', () => {
       mockTikTokBusinessModule.logout.mockResolvedValue('logged out');
 
       // 1. Initialize SDK
-      await TikTokBusiness.initializeSdk('com.example.app', 'tt123456', true);
+      await TikTokBusiness.initializeSdk(
+        'com.example.app',
+        'tt123456',
+        'test-token',
+        true
+      );
 
       // 2. User registration
       await TikTokBusiness.trackEvent(TikTokEventName.REGISTRATION);
@@ -154,7 +159,12 @@ describe('Integration Tests', () => {
       mockTikTokBusinessModule.trackCustomEvent.mockResolvedValue('tracked');
 
       // 1. Initialize SDK
-      await TikTokBusiness.initializeSdk('com.example.game', 'tt654321', false);
+      await TikTokBusiness.initializeSdk(
+        'com.example.game',
+        'tt654321',
+        'test-token',
+        false
+      );
 
       // 2. User registration
       await TikTokBusiness.trackEvent(TikTokEventName.REGISTRATION);
@@ -227,7 +237,11 @@ describe('Integration Tests', () => {
       mockTikTokBusinessModule.trackContentEvent.mockResolvedValue('tracked');
 
       // 1. Initialize SDK (succeeds)
-      await TikTokBusiness.initializeSdk('com.example.app', 'tt123456');
+      await TikTokBusiness.initializeSdk(
+        'com.example.app',
+        'tt123456',
+        'test-token'
+      );
 
       // 2. Try to identify user (fails)
       await expect(
@@ -268,7 +282,11 @@ describe('Integration Tests', () => {
 
       // 1. Try to initialize SDK (fails)
       await expect(
-        TikTokBusiness.initializeSdk('com.example.app', 'invalid_id')
+        TikTokBusiness.initializeSdk(
+          'com.example.app',
+          'invalid_id',
+          'test-token'
+        )
       ).rejects.toThrow('SDK initialization failed');
 
       // 2. Try to track event anyway (should still work at JS level)

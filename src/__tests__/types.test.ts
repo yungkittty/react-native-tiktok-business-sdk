@@ -35,9 +35,9 @@ describe('TypeScript Type Validation', () => {
     it('should accept correct parameter types for initializeSdk', () => {
       // These should compile without TypeScript errors
       expect(() => {
-        initializeSdk('app-id', 'tt-app-id');
-        initializeSdk('app-id', 'tt-app-id', true);
-        initializeSdk('app-id', 'tt-app-id', false);
+        initializeSdk('app-id', 'tt-app-id', 'test-token');
+        initializeSdk('app-id', 'tt-app-id', 'test-token', true);
+        initializeSdk('app-id', 'tt-app-id', 'test-token', false);
       }).not.toThrow();
     });
 
@@ -143,7 +143,7 @@ describe('TypeScript Type Validation', () => {
   describe('Return types', () => {
     it('should return Promise<string> for all async functions', async () => {
       // Test that all functions return the correct type
-      const initResult = await initializeSdk('app', 'tt-app');
+      const initResult = await initializeSdk('app', 'tt-app', 'test-token');
       const identifyResult = await identify('id', 'name', 'phone', 'email');
       const logoutResult = await logout();
       const trackEventResult = await trackEvent(TikTokEventName.REGISTRATION);
@@ -173,7 +173,7 @@ describe('TypeScript Type Validation', () => {
 
     it('should have methods with correct signatures', () => {
       // Test that methods have the expected number of parameters
-      expect(TikTokBusiness.initializeSdk.length).toBe(3);
+      expect(TikTokBusiness.initializeSdk.length).toBe(4);
       expect(TikTokBusiness.identify.length).toBe(4);
       expect(TikTokBusiness.logout.length).toBe(0);
       expect(TikTokBusiness.trackEvent.length).toBe(3);

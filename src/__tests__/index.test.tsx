@@ -28,15 +28,17 @@ describe('TikTokBusiness', () => {
     it('should call native module with correct parameters', async () => {
       const appId = 'test-app-id';
       const ttAppId = 'test-tiktok-app-id';
+      const accessToken = 'test-token';
       const debug = true;
 
       mockTikTokBusinessModule.initializeSdk.mockResolvedValue('success');
 
-      await initializeSdk(appId, ttAppId, debug);
+      await initializeSdk(appId, ttAppId, accessToken, debug);
 
       expect(mockTikTokBusinessModule.initializeSdk).toHaveBeenCalledWith(
         appId,
         ttAppId,
+        accessToken,
         debug
       );
     });
@@ -44,14 +46,16 @@ describe('TikTokBusiness', () => {
     it('should default debug to false when not provided', async () => {
       const appId = 'test-app-id';
       const ttAppId = 'test-tiktok-app-id';
+      const accessToken = 'test-token';
 
       mockTikTokBusinessModule.initializeSdk.mockResolvedValue('success');
 
-      await initializeSdk(appId, ttAppId);
+      await initializeSdk(appId, ttAppId, accessToken);
 
       expect(mockTikTokBusinessModule.initializeSdk).toHaveBeenCalledWith(
         appId,
         ttAppId,
+        accessToken,
         false
       );
     });
@@ -59,11 +63,12 @@ describe('TikTokBusiness', () => {
     it('should handle initialization errors', async () => {
       const appId = 'test-app-id';
       const ttAppId = 'test-tiktok-app-id';
+      const accessToken = 'test-token';
       const error = new Error('Initialization failed');
 
       mockTikTokBusinessModule.initializeSdk.mockRejectedValue(error);
 
-      await expect(initializeSdk(appId, ttAppId)).rejects.toThrow(
+      await expect(initializeSdk(appId, ttAppId, accessToken)).rejects.toThrow(
         'Initialization failed'
       );
     });

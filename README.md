@@ -171,7 +171,6 @@ If you're using Proguard to optimize your app, you must add rules to prevent Pro
 ## Upcoming Features
 
 - [ ] Add example app
-- [ ] Unit and integration tests
 - [ ] Add support for TurboModules
 - [ ] Improve TypeScript declarations and documentation
 - [ ] Enhance error handling and logging mechanisms

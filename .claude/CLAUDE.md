@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a React Native bridge for the TikTok Business SDK, enabling JavaScript apps to initialize the TikTok SDK, identify users, and track various events (standard, content, and custom events). The library supports both iOS and Android platforms.
+This is a React Native bridge for the TikTok Business SDK v1.4.1, enabling JavaScript apps to initialize the TikTok SDK, identify users, and track various events (standard, content, and custom events). The library supports both iOS and Android platforms with promise-based async APIs.
 
 ## Development Commands
 
@@ -36,6 +36,9 @@ This is a React Native bridge for the TikTok Business SDK, enabling JavaScript a
 
 #### JavaScript Bridge (src/index.tsx)
 - Exports main `TikTokBusiness` object with methods: `initializeSdk`, `identify`, `logout`, `trackEvent`, `trackContentEvent`, `trackCustomEvent`
+- All methods return promises for proper async/await handling
+- **initializeSdk**: Requires appId, ttAppId, accessToken (mandatory in v1.4.1), and optional debug flag
+- **identify**: Takes 4 parameters: externalId, externalUserName, phoneNumber, email (uses `identifyWithExternalID` internally)
 - Defines enums for event names and parameters:
   - `TikTokEventName`: Standard events (REGISTRATION, LOGIN, etc.)
   - `TikTokContentEventName`: Content events (ADD_TO_CART, PURCHASE, etc.)
@@ -43,9 +46,19 @@ This is a React Native bridge for the TikTok Business SDK, enabling JavaScript a
   - `TikTokContentEventContentsParameter`: Content item parameters
 
 #### Native Modules
-- **Android**: `android/src/main/java/com/tiktokbusiness/TikTokBusinessModule.kt`
-- **iOS**: `ios/TikTokBusinessModule.swift`
-- Both implement the same interface for SDK initialization and event tracking
+- **Android**: `android/src/main/java/com/tiktokbusiness/TikTokBusinessModule.kt` (TikTok Business SDK v1.4.1)
+- **iOS**: `ios/TikTokBusinessModule.swift` (TikTok Business SDK v1.4.1)
+- Both implement promise-based async methods using RCTPromiseResolveBlock/RCTPromiseRejectBlock
+- **iOS Implementation Notes**:
+  - Uses modern TikTok SDK APIs: `identifyWithExternalID`, `trackTTEvent`, `initializeSdk` with completionHandler
+  - Avoids deprecated methods like `trackEvent` (use `trackTTEvent` instead)
+  - Proper error handling with specific error codes (INIT_ERROR, IDENTIFY_ERROR, etc.)
+  - Uses `TikTokConfig(accessToken:appId:tiktokAppId:)` constructor pattern
+- **Android Implementation Notes**:
+  - Uses promise-based async methods with proper error handling
+  - Implements `TTInitCallback` for initialization success/failure handling
+  - Uses `TTConfig.setAccessToken()` for mandatory access token
+  - Proper try-catch blocks around all native SDK calls
 
 ### Build System
 - Uses `react-native-builder-bob` for building CommonJS, ES Module, and TypeScript definitions
@@ -92,7 +105,24 @@ This is a React Native bridge for the TikTok Business SDK, enabling JavaScript a
 
 ## Important Notes
 
+### SDK Version and Compatibility
+- Updated to TikTok Business SDK v1.4.1 (iOS and Android)
+- **Breaking Change**: `accessToken` is now mandatory in `initializeSdk` (required by v1.4.1)
+- Uses modern, non-deprecated APIs throughout (future-proof implementation)
+
+### Development Requirements
 - The library requires native linking (not compatible with Expo Go)
+- iOS: Uses CocoaPods with TikTokBusinessSDK v1.4.1 dependency
+- Android: Uses Gradle with tiktok-business-android-sdk v1.4.1 dependency
 - Android requires ProGuard rules for TikTok classes: `-keep class com.tiktok.** { *; }`
-- All native methods are async and return promises
+
+### API Signatures
+- All native methods are async and return promises with proper error handling
+- `initializeSdk(appId, ttAppId, accessToken, debug?)` - accessToken is required
+- `identify(externalId, externalUserName, phoneNumber, email)` - all 4 parameters required
 - Error handling tests may show expected errors in console - this is normal behavior
+
+### Testing and Quality
+- Run `yarn test && yarn lint && yarn typecheck` before commits
+- 93.75% test coverage with comprehensive integration scenarios
+- Native module mocking handles React Native bridge testing complexities

@@ -33,7 +33,7 @@ import { TikTokBusiness } from 'react-native-tiktok-business-sdk';
 
 ### Initialize the SDK
 
-Before using any event tracking methods, you must initialize the SDK. You can call `initializeSdk` with your appId and tiktokAppId, and optionally set debug mode. (The debug parameter defaults to false if not provided).
+Before using any event tracking methods, you must initialize the SDK. You can call `initializeSdk` with your appId, tiktokAppId, accessToken, and optionally set debug mode. (The debug parameter defaults to false if not provided).
 
 ```js
 async function initializeTikTokSDK() {
@@ -41,6 +41,7 @@ async function initializeTikTokSDK() {
     await TikTokBusiness.initializeSdk(
       'YOUR_APP_ID',
       'YOUR_TIKTOK_APP_ID',
+      'YOUR_ACCESS_TOKEN',
       true
     );
     // SDK is now initialized, and tracking is active.

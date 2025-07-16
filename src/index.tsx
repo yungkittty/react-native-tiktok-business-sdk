@@ -98,15 +98,22 @@ type EventProps = {
  * Initializes the TikTok SDK.
  * @param appId - Your app ID (e.g., Android package name or iOS listing ID)
  * @param ttAppId - Your TikTok App ID from TikTok Events Manager
+ * @param accessToken - Your access token from TikTok Events Manager
  * @param debug - Whether to enable debug mode
  * @returns A promise that resolves when the SDK is initialized.
  */
 export const initializeSdk = async (
   appId: string,
   ttAppId: string,
+  accessToken: string,
   debug?: Boolean
 ): Promise<string> =>
-  await TikTokBusinessModule.initializeSdk(appId, ttAppId, debug || false);
+  await TikTokBusinessModule.initializeSdk(
+    appId,
+    ttAppId,
+    accessToken,
+    debug || false
+  );
 
 /**
  * Identifies the user.

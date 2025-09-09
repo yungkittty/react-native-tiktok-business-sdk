@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2025-09-09
+
+### 🚀 Major Updates
+
+- **Updated to TikTok Business SDK v1.5.0** (iOS and Android)
+
+### ✨ Features
+
+- **Added impression-level ad revenue tracking** with new `trackAdRevenueEvent()` method
+- **New `IMPRESSION_LEVEL_AD_REVENUE` event type** in `TikTokEventName` enum
+
+### 🐛 Bug Fixes
+
+- **Fixed event name values** to match official TikTok Business SDK format (now uses camelCase instead of UPPER_CASE)
+
+### ⚠️ Breaking Changes
+
+**Event Name Format Update**
+Event names now use camelCase format to match the official TikTok Business SDK:
+
+```js
+// Before (v1.4.1 and earlier)
+TikTokEventName.START_TRIAL = 'START_TRIAL'
+TikTokEventName.ADD_PAYMENT_INFO = 'ADD_PAYMENT_INFO'
+
+// After (v1.5.0)
+TikTokEventName.START_TRIAL = 'StartTrial'
+TikTokEventName.ADD_PAYMENT_INFO = 'AddPaymentInfo'
+```
+
+**Migration**: No code changes needed if using the enum constants. Only affects you if using hardcoded string values.
+
 ## [1.4.1] - 2025-07-16
 
 ### 🚀 Major Updates

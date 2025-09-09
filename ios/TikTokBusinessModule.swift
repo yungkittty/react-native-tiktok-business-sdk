@@ -184,6 +184,32 @@ class TikTokBusinessModule: NSObject, RCTBridgeModule {
     }
   }
   
+  /// Reports an ad revenue event.
+  /// Uses TikTokAdRevenueEvent to track impression-level ad revenue data.
+  @objc func trackAdRevenueEvent(_ adRevenueJson: NSDictionary,
+                                 eventId: String?,
+                                 resolver: @escaping RCTPromiseResolveBlock,
+                                 rejecter: @escaping RCTPromiseRejectBlock) {
+    do {
+      guard let adRevenueDict = adRevenueJson as? [AnyHashable: Any] else {
+        rejecter("INVALID_AD_REVENUE_DATA", "Failed to convert ad revenue data", nil)
+        return
+      }
+      
+      let adRevenueEvent: TikTokAdRevenueEvent
+      if let eventId = eventId, !eventId.isEmpty {
+        adRevenueEvent = TikTokAdRevenueEvent(adRevenue: adRevenueDict, eventId: eventId)
+      } else {
+        adRevenueEvent = TikTokAdRevenueEvent(adRevenue: adRevenueDict, eventId: "")
+      }
+      
+      TikTokBusiness.trackTTEvent(adRevenueEvent)
+      resolver("Ad revenue event tracked successfully")
+    } catch {
+      rejecter("TRACK_AD_REVENUE_ERROR", "Failed to track ad revenue event", error)
+    }
+  }
+  
   /// Initializes the TikTok SDK.
   /// Accepts appId, ttAppId, accessToken, and an optional debug flag.
   @objc func initializeSdk(_ appId: String, 

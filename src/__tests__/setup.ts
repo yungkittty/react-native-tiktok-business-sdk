@@ -6,6 +6,7 @@ const mockTikTokBusinessModule = {
   trackEvent: jest.fn(),
   trackContentEvent: jest.fn(),
   trackCustomEvent: jest.fn(),
+  trackAdRevenueEvent: jest.fn(),
 };
 
 // Mock React Native Platform

@@ -28,6 +28,11 @@ RCT_EXTERN_METHOD(trackCustomEvent:(NSString *)eventName
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(trackAdRevenueEvent:(NSDictionary *)adRevenueJson
+                  eventId:(NSString *)eventId
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(initializeSdk:(NSString *)appId
                   ttAppId:(NSString *)ttAppId
                   accessToken:(NSString *)accessToken

@@ -84,28 +84,28 @@ describe('TypeScript Type Validation', () => {
 
   describe('Enum values', () => {
     it('should have correct TikTokEventName enum values', () => {
-      expect(TikTokEventName.ACHIEVE_LEVEL).toBe('ACHIEVE_LEVEL');
-      expect(TikTokEventName.ADD_PAYMENT_INFO).toBe('ADD_PAYMENT_INFO');
-      expect(TikTokEventName.COMPLETE_TUTORIAL).toBe('COMPLETE_TUTORIAL');
-      expect(TikTokEventName.CREATE_GROUP).toBe('CREATE_GROUP');
-      expect(TikTokEventName.CREATE_ROLE).toBe('CREATE_ROLE');
-      expect(TikTokEventName.GENERATE_LEAD).toBe('GENERATE_LEAD');
-      expect(TikTokEventName.IN_APP_AD_CLICK).toBe('IN_APP_AD_CLICK');
-      expect(TikTokEventName.IN_APP_AD_IMPR).toBe('IN_APP_AD_IMPR');
-      expect(TikTokEventName.INSTALL_APP).toBe('INSTALL_APP');
-      expect(TikTokEventName.JOIN_GROUP).toBe('JOIN_GROUP');
-      expect(TikTokEventName.LAUNCH_APP).toBe('LAUNCH_APP');
-      expect(TikTokEventName.LOAN_APPLICATION).toBe('LOAN_APPLICATION');
-      expect(TikTokEventName.LOAN_APPROVAL).toBe('LOAN_APPROVAL');
-      expect(TikTokEventName.LOAN_DISBURSAL).toBe('LOAN_DISBURSAL');
-      expect(TikTokEventName.LOGIN).toBe('LOGIN');
-      expect(TikTokEventName.RATE).toBe('RATE');
-      expect(TikTokEventName.REGISTRATION).toBe('REGISTRATION');
-      expect(TikTokEventName.SEARCH).toBe('SEARCH');
-      expect(TikTokEventName.SPEND_CREDITS).toBe('SPEND_CREDITS');
-      expect(TikTokEventName.START_TRIAL).toBe('START_TRIAL');
-      expect(TikTokEventName.SUBSCRIBE).toBe('SUBSCRIBE');
-      expect(TikTokEventName.UNLOCK_ACHIEVEMENT).toBe('UNLOCK_ACHIEVEMENT');
+      expect(TikTokEventName.ACHIEVE_LEVEL).toBe('AchieveLevel');
+      expect(TikTokEventName.ADD_PAYMENT_INFO).toBe('AddPaymentInfo');
+      expect(TikTokEventName.COMPLETE_TUTORIAL).toBe('CompleteTutorial');
+      expect(TikTokEventName.CREATE_GROUP).toBe('CreateGroup');
+      expect(TikTokEventName.CREATE_ROLE).toBe('CreateRole');
+      expect(TikTokEventName.GENERATE_LEAD).toBe('GenerateLead');
+      expect(TikTokEventName.IN_APP_AD_CLICK).toBe('InAppADClick');
+      expect(TikTokEventName.IN_APP_AD_IMPR).toBe('InAppADImpr');
+      expect(TikTokEventName.INSTALL_APP).toBe('InstallApp');
+      expect(TikTokEventName.JOIN_GROUP).toBe('JoinGroup');
+      expect(TikTokEventName.LAUNCH_APP).toBe('LaunchAPP');
+      expect(TikTokEventName.LOAN_APPLICATION).toBe('LoanApplication');
+      expect(TikTokEventName.LOAN_APPROVAL).toBe('LoanApproval');
+      expect(TikTokEventName.LOAN_DISBURSAL).toBe('LoanDisbursal');
+      expect(TikTokEventName.LOGIN).toBe('Login');
+      expect(TikTokEventName.RATE).toBe('Rate');
+      expect(TikTokEventName.REGISTRATION).toBe('Registration');
+      expect(TikTokEventName.SEARCH).toBe('Search');
+      expect(TikTokEventName.SPEND_CREDITS).toBe('SpendCredits');
+      expect(TikTokEventName.START_TRIAL).toBe('StartTrial');
+      expect(TikTokEventName.SUBSCRIBE).toBe('Subscribe');
+      expect(TikTokEventName.UNLOCK_ACHIEVEMENT).toBe('UnlockAchievement');
     });
 
     it('should have correct TikTokContentEventName enum values', () => {

@@ -11,12 +11,12 @@ This library provides a modern, promise-based interface for the TikTok Business 
 
 ## ✨ Features
 
-- 🚀 **TikTok Business SDK v1.4.1** - Latest version with enhanced features
+- 🚀 **TikTok Business SDK v1.5.0** - Latest version with impression-level ad revenue tracking
 - 📱 **Cross-platform** - iOS and Android support
 - 🎯 **Promise-based API** - Modern async/await support
 - 🔒 **TypeScript** - Full type safety and IntelliSense
 - 🧪 **Comprehensive testing** - 93.75% test coverage with 70+ tests
-- 📊 **Event tracking** - Standard, content, and custom events
+- 📊 **Event tracking** - Standard, content, custom events, and ad revenue tracking
 - 🛡️ **Error handling** - Robust error handling with specific error codes
 - 🎨 **Developer friendly** - Simple API with detailed documentation
 
@@ -203,6 +203,47 @@ async function trackCustomEvent() {
 }
 ```
 
+### Track Ad Revenue Events
+
+Track impression-level ad revenue data using the `trackAdRevenueEvent` method. This is useful for monetization tracking with ad networks like AdMob, Unity, IronSource, etc.
+
+```js
+import { TikTokBusiness, trackAdRevenueEvent } from 'react-native-tiktok-business-sdk';
+import type { AdRevenueData } from 'react-native-tiktok-business-sdk';
+
+async function trackAdRevenue() {
+  try {
+    const adRevenueData: AdRevenueData = {
+      revenue: 0.05,              // Revenue amount
+      currency: 'USD',            // Currency code
+      adNetwork: 'AdMob',         // Ad network name
+      adUnit: 'banner_main',      // Ad unit identifier
+      adFormat: 'banner',         // Ad format (banner, interstitial, rewarded)
+      placement: 'home_screen',   // Placement in your app
+      country: 'US',              // Country code
+      precision: 'exact',         // Precision level
+    };
+
+    // Track ad revenue with optional event ID
+    await trackAdRevenueEvent(adRevenueData, 'ad-revenue-001');
+    
+    console.log('Ad revenue tracked successfully!');
+  } catch (error) {
+    console.error('Error tracking ad revenue:', error);
+  }
+}
+
+// Alternative: Use standard event tracking
+async function trackImpressionEvent() {
+  try {
+    await TikTokBusiness.trackEvent(TikTokEventName.IMPRESSION_LEVEL_AD_REVENUE);
+    console.log('Impression event tracked successfully!');
+  } catch (error) {
+    console.error('Error tracking impression event:', error);
+  }
+}
+```
+
 ## API Reference
 
 ### Available Methods
@@ -221,6 +262,25 @@ logout(): Promise<string>
 trackEvent(eventName: TikTokEventName, eventId?: string, properties?: object): Promise<string>
 trackContentEvent(eventName: TikTokContentEventName, properties?: object): Promise<string>
 trackCustomEvent(eventName: string, properties?: object): Promise<string>
+trackAdRevenueEvent(adRevenueData: AdRevenueData, eventId?: string): Promise<string>
+```
+
+### Types
+
+#### AdRevenueData Interface
+
+```typescript
+interface AdRevenueData {
+  revenue?: number;        // Revenue amount in specified currency
+  currency?: string;       // Currency code (e.g., 'USD', 'EUR')
+  adNetwork?: string;      // Ad network name (e.g., 'AdMob', 'Unity', 'IronSource')
+  adUnit?: string;         // Ad unit identifier
+  adFormat?: string;       // Ad format (e.g., 'banner', 'interstitial', 'rewarded')
+  placement?: string;      // Placement identifier in your app
+  country?: string;        // Country code where ad was shown
+  precision?: string;      // Precision level of revenue data
+  [key: string]: string | number | boolean | undefined; // Additional custom properties
+}
 ```
 
 ### Enums
@@ -237,11 +297,13 @@ The library exports the following enums to ensure consistency when reporting eve
 ```js
 import {
   TikTokBusiness,
+  trackAdRevenueEvent,
   TikTokEventName,
   TikTokContentEventName,
   TikTokContentEventParameter,
   TikTokContentEventContentsParameter,
 } from 'react-native-tiktok-business-sdk';
+import type { AdRevenueData } from 'react-native-tiktok-business-sdk';
 ```
 
 ## Error Handling
@@ -273,7 +335,6 @@ try {
 - React Native 0.60+
 - iOS 11.0+
 - Android API level 16+
-- TikTok Business SDK v1.4.1
 
 ## ProGuard (Android)
 

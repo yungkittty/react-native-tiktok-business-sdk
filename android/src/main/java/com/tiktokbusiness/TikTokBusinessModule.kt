@@ -3,8 +3,10 @@ package com.tiktokbusiness
 import com.facebook.react.bridge.*
 import com.tiktok.TikTokBusinessSdk
 import com.tiktok.appevents.base.EventName
+import com.tiktok.appevents.base.TTAdRevenueEvent
 import com.tiktok.appevents.base.TTBaseEvent
 import com.tiktok.appevents.contents.*
+import org.json.JSONObject
 
 class TikTokBusinessModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
@@ -43,18 +45,29 @@ class TikTokBusinessModule(reactContext: ReactApplicationContext) :
   }
 
   /**
+   * Maps event name strings to EventName enums.
+   */
+  private fun getEventNameEnum(eventName: String): EventName? {
+    return EventName.values().find { it.toString() == eventName }
+  }
+
+  /**
    * Reports a standard event.
    * If 'parameters' is null or empty, the event is reported without additional properties.
    * Otherwise, it builds a TTBaseEvent with the provided properties.
    *
-   * Expects the eventName to match one of the values in the EventName enum.
+   * Expects the eventName to match one of the string values in the EventName enum.
    */
   @ReactMethod
   fun trackEvent(
     eventName: String, eventId: String?, parameters: ReadableMap?, promise: Promise
   ) {
     try {
-      val eventEnum = EventName.valueOf(eventName)
+      val eventEnum = getEventNameEnum(eventName)
+      if (eventEnum == null) {
+        promise.reject("INVALID_EVENT_NAME", "Unknown event name: $eventName", null)
+        return
+      }
       if (parameters == null || !parameters.keySetIterator().hasNextKey()) {
         if (eventId.isNullOrEmpty()) {
           TikTokBusinessSdk.trackTTEvent(eventEnum)
@@ -189,6 +202,40 @@ class TikTokBusinessModule(reactContext: ReactApplicationContext) :
       promise.resolve("Custom event tracked successfully")
     } catch (e: Exception) {
       promise.reject("TRACK_CUSTOM_EVENT_ERROR", "Failed to track custom event", e)
+    }
+  }
+
+  /**
+   * Reports an ad revenue event.
+   * Uses TTAdRevenueEvent to track impression-level ad revenue data.
+   */
+  @ReactMethod
+  fun trackAdRevenueEvent(adRevenueJson: ReadableMap, eventId: String?, promise: Promise) {
+    try {
+      val jsonObject = JSONObject()
+      val iterator = adRevenueJson.keySetIterator()
+      while (iterator.hasNextKey()) {
+        val key = iterator.nextKey()
+        when (adRevenueJson.getType(key)) {
+          ReadableType.String -> jsonObject.put(key, adRevenueJson.getString(key))
+          ReadableType.Number -> jsonObject.put(key, adRevenueJson.getDouble(key))
+          ReadableType.Boolean -> jsonObject.put(key, adRevenueJson.getBoolean(key))
+          else -> {
+            // Skip unsupported types
+          }
+        }
+      }
+
+      val event = if (eventId.isNullOrEmpty()) {
+        TTAdRevenueEvent.newBuilder(jsonObject).build()
+      } else {
+        TTAdRevenueEvent.newBuilder(jsonObject, eventId).build()
+      }
+
+      TikTokBusinessSdk.trackTTEvent(event)
+      promise.resolve("Ad revenue event tracked successfully")
+    } catch (e: Exception) {
+      promise.reject("TRACK_AD_REVENUE_ERROR", "Failed to track ad revenue event", e)
     }
   }
 

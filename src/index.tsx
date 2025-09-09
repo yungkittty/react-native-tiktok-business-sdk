@@ -21,28 +21,29 @@ const TikTokBusinessModule = NativeModules.TikTokBusinessModule
  * TikTok event names as defined by the TikTok Business SDK.
  */
 export enum TikTokEventName {
-  ACHIEVE_LEVEL = 'ACHIEVE_LEVEL',
-  ADD_PAYMENT_INFO = 'ADD_PAYMENT_INFO',
-  COMPLETE_TUTORIAL = 'COMPLETE_TUTORIAL',
-  CREATE_GROUP = 'CREATE_GROUP',
-  CREATE_ROLE = 'CREATE_ROLE',
-  GENERATE_LEAD = 'GENERATE_LEAD',
-  IN_APP_AD_CLICK = 'IN_APP_AD_CLICK',
-  IN_APP_AD_IMPR = 'IN_APP_AD_IMPR',
-  INSTALL_APP = 'INSTALL_APP',
-  JOIN_GROUP = 'JOIN_GROUP',
-  LAUNCH_APP = 'LAUNCH_APP',
-  LOAN_APPLICATION = 'LOAN_APPLICATION',
-  LOAN_APPROVAL = 'LOAN_APPROVAL',
-  LOAN_DISBURSAL = 'LOAN_DISBURSAL',
-  LOGIN = 'LOGIN',
-  RATE = 'RATE',
-  REGISTRATION = 'REGISTRATION',
-  SEARCH = 'SEARCH',
-  SPEND_CREDITS = 'SPEND_CREDITS',
-  START_TRIAL = 'START_TRIAL',
-  SUBSCRIBE = 'SUBSCRIBE',
-  UNLOCK_ACHIEVEMENT = 'UNLOCK_ACHIEVEMENT',
+  ACHIEVE_LEVEL = 'AchieveLevel',
+  ADD_PAYMENT_INFO = 'AddPaymentInfo',
+  COMPLETE_TUTORIAL = 'CompleteTutorial',
+  CREATE_GROUP = 'CreateGroup',
+  CREATE_ROLE = 'CreateRole',
+  GENERATE_LEAD = 'GenerateLead',
+  IMPRESSION_LEVEL_AD_REVENUE = 'ImpressionLevelAdRevenue',
+  IN_APP_AD_CLICK = 'InAppADClick',
+  IN_APP_AD_IMPR = 'InAppADImpr',
+  INSTALL_APP = 'InstallApp',
+  JOIN_GROUP = 'JoinGroup',
+  LAUNCH_APP = 'LaunchAPP',
+  LOAN_APPLICATION = 'LoanApplication',
+  LOAN_APPROVAL = 'LoanApproval',
+  LOAN_DISBURSAL = 'LoanDisbursal',
+  LOGIN = 'Login',
+  RATE = 'Rate',
+  REGISTRATION = 'Registration',
+  SEARCH = 'Search',
+  SPEND_CREDITS = 'SpendCredits',
+  START_TRIAL = 'StartTrial',
+  SUBSCRIBE = 'Subscribe',
+  UNLOCK_ACHIEVEMENT = 'UnlockAchievement',
 }
 
 // Events that allow additional parameters:
@@ -187,6 +188,44 @@ export const trackCustomEvent = async (
 ): Promise<string> =>
   await TikTokBusinessModule.trackCustomEvent(eventName, properties);
 
+/**
+ * Ad revenue data structure for impression-level ad revenue tracking
+ */
+export interface AdRevenueData {
+  /** Revenue amount in the specified currency */
+  revenue?: number;
+  /** Currency code (e.g., 'USD', 'EUR') */
+  currency?: string;
+  /** Ad network name (e.g., 'AdMob', 'Unity', 'IronSource') */
+  adNetwork?: string;
+  /** Ad unit identifier */
+  adUnit?: string;
+  /** Ad format (e.g., 'banner', 'interstitial', 'rewarded') */
+  adFormat?: string;
+  /** Placement identifier */
+  placement?: string;
+  /** Country code where ad was shown */
+  country?: string;
+  /** Precision level of the revenue data */
+  precision?: string;
+  /** Additional custom properties */
+  [key: string]: string | number | boolean | undefined;
+}
+
+/**
+ * Reports an ad revenue event for impression-level ad revenue tracking.
+ * @param adRevenueData - Ad revenue data containing revenue, currency, network info, etc.
+ * @param eventId - Optional event ID for tracking
+ */
+export const trackAdRevenueEvent = async (
+  adRevenueData: AdRevenueData,
+  eventId?: string
+): Promise<string> =>
+  await TikTokBusinessModule.trackAdRevenueEvent(
+    adRevenueData,
+    eventId || null
+  );
+
 export const TikTokBusiness = {
   initializeSdk,
   identify,
@@ -194,6 +233,7 @@ export const TikTokBusiness = {
   trackEvent,
   trackContentEvent,
   trackCustomEvent,
+  trackAdRevenueEvent,
 };
 
 export default TikTokBusiness;

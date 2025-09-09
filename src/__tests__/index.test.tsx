@@ -7,11 +7,13 @@ import {
   trackEvent,
   trackContentEvent,
   trackCustomEvent,
+  trackAdRevenueEvent,
   TikTokEventName,
   TikTokContentEventName,
   TikTokContentEventParameter,
   TikTokContentEventContentsParameter,
 } from '../index';
+import type { AdRevenueData } from '../index';
 
 // Get the mocked module
 const mockTikTokBusinessModule =
@@ -282,10 +284,10 @@ describe('TikTokBusiness', () => {
 
   describe('Enums', () => {
     it('should export TikTokEventName enum with correct values', () => {
-      expect(TikTokEventName.REGISTRATION).toBe('REGISTRATION');
-      expect(TikTokEventName.LOGIN).toBe('LOGIN');
-      expect(TikTokEventName.SEARCH).toBe('SEARCH');
-      expect(TikTokEventName.ADD_PAYMENT_INFO).toBe('ADD_PAYMENT_INFO');
+      expect(TikTokEventName.REGISTRATION).toBe('Registration');
+      expect(TikTokEventName.LOGIN).toBe('Login');
+      expect(TikTokEventName.SEARCH).toBe('Search');
+      expect(TikTokEventName.ADD_PAYMENT_INFO).toBe('AddPaymentInfo');
     });
 
     it('should export TikTokContentEventName enum with correct values', () => {
@@ -309,6 +311,91 @@ describe('TikTokBusiness', () => {
       );
       expect(TikTokContentEventContentsParameter.PRICE).toBe('PRICE');
       expect(TikTokContentEventContentsParameter.QUANTITY).toBe('QUANTITY');
+    });
+
+    it('should include IMPRESSION_LEVEL_AD_REVENUE in TikTokEventName enum', () => {
+      expect(TikTokEventName.IMPRESSION_LEVEL_AD_REVENUE).toBe(
+        'ImpressionLevelAdRevenue'
+      );
+    });
+  });
+
+  describe('trackAdRevenueEvent', () => {
+    it('should call native module with ad revenue data and no event ID', async () => {
+      const adRevenueData: AdRevenueData = {
+        revenue: 0.05,
+        currency: 'USD',
+        adNetwork: 'AdMob',
+        adUnit: 'banner_main',
+        adFormat: 'banner',
+        placement: 'home_screen',
+        country: 'US',
+        precision: 'exact',
+      };
+
+      mockTikTokBusinessModule.trackAdRevenueEvent.mockResolvedValue('success');
+
+      await trackAdRevenueEvent(adRevenueData);
+
+      expect(mockTikTokBusinessModule.trackAdRevenueEvent).toHaveBeenCalledWith(
+        adRevenueData,
+        null
+      );
+    });
+
+    it('should call native module with ad revenue data and event ID', async () => {
+      const adRevenueData: AdRevenueData = {
+        revenue: 0.12,
+        currency: 'USD',
+        adNetwork: 'Unity',
+        adUnit: 'rewarded_video',
+        adFormat: 'rewarded',
+      };
+      const eventId = 'test-event-id';
+
+      mockTikTokBusinessModule.trackAdRevenueEvent.mockResolvedValue('success');
+
+      await trackAdRevenueEvent(adRevenueData, eventId);
+
+      expect(mockTikTokBusinessModule.trackAdRevenueEvent).toHaveBeenCalledWith(
+        adRevenueData,
+        eventId
+      );
+    });
+
+    it('should work with minimal ad revenue data', async () => {
+      const adRevenueData: AdRevenueData = {
+        revenue: 0.01,
+        currency: 'USD',
+      };
+
+      mockTikTokBusinessModule.trackAdRevenueEvent.mockResolvedValue('success');
+
+      await trackAdRevenueEvent(adRevenueData);
+
+      expect(mockTikTokBusinessModule.trackAdRevenueEvent).toHaveBeenCalledWith(
+        adRevenueData,
+        null
+      );
+    });
+
+    it('should support custom properties in ad revenue data', async () => {
+      const adRevenueData: AdRevenueData = {
+        revenue: 0.25,
+        currency: 'EUR',
+        adNetwork: 'IronSource',
+        customParam: 'test_value',
+        instanceId: 12345,
+      };
+
+      mockTikTokBusinessModule.trackAdRevenueEvent.mockResolvedValue('success');
+
+      await trackAdRevenueEvent(adRevenueData);
+
+      expect(mockTikTokBusinessModule.trackAdRevenueEvent).toHaveBeenCalledWith(
+        adRevenueData,
+        null
+      );
     });
   });
 });

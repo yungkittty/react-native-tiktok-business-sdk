@@ -40,6 +40,8 @@ RCT_EXTERN_METHOD(initializeSdk:(NSString *)appId
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(flush)
+
 + (BOOL)requiresMainQueueSetup
 {
   return NO;

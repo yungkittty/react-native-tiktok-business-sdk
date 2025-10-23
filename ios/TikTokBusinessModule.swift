@@ -236,4 +236,8 @@ class TikTokBusinessModule: NSObject, RCTBridgeModule {
       }
     }
   }
+
+  @objc func flush() {
+    TikTokBusinessSdk.explicitlyFlush()
+  }
 }

@@ -226,6 +226,8 @@ export const trackAdRevenueEvent = async (
     eventId || null
   );
 
+export const flush = (): void => TikTokBusinessModule.flush();
+
 export const TikTokBusiness = {
   initializeSdk,
   identify,
@@ -234,6 +236,7 @@ export const TikTokBusiness = {
   trackContentEvent,
   trackCustomEvent,
   trackAdRevenueEvent,
+  flush,
 };
 
 export default TikTokBusiness;

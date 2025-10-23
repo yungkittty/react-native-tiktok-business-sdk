@@ -264,6 +264,11 @@ class TikTokBusinessModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @ReactMethod
+  fun flush() {
+    TikTokBusinessSdk.flush()
+  }
+
   companion object {
     const val NAME = "TikTokBusinessModule"
   }

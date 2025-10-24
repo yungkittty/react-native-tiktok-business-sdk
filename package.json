@@ -202,5 +202,6 @@
     "type": "legacy-module",
     "languages": "kotlin-swift",
     "version": "0.48.3"
-  }
+  },
+  "private": true
 }
